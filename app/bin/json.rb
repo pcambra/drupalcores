@@ -14,10 +14,13 @@ commits = Array.new
 reverts = Array.new
 
 %x[#{git_command}].split("\n").each do |c|
-  if c.index('Revert') == 0 then
-    reverts.push(c.scan(/#([0-9]+)/))
-  else
-    commits.push(c)
+  issue_number = c.scan(/#([0-9]+)/)
+  if issue_number.empty? == false || c.index('Issue') == 0
+    if c.index('Revert') == 0 then
+      reverts.push(issue_number)
+    else
+      commits.push(c)
+    end
   end
 end
 
